@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>songwaCTF - Platform CTF Gratis</title>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         :root {
             --primary: #0a0a0a;
@@ -655,21 +654,6 @@
             text-shadow: 0 0 10px var(--accent-glow);
         }
 
-        /* QR Code Styles */
-        .qr-container {
-            text-align: center;
-            margin: 2rem 0;
-        }
-        
-        .qr-code {
-            width: 200px;
-            height: 200px;
-            margin: 1rem auto;
-            border: 2px solid var(--accent);
-            padding: 10px;
-            background: white;
-        }
-        
         .flag-input {
             width: 300px;
             padding: 1rem;
@@ -851,7 +835,7 @@
                         <h3 style="color: var(--text-primary); margin-bottom: 1.5rem;">MISI AKTIF</h3>
                         <div class="stats-grid">
                             <div class="stat-card">
-                                <div class="stat-value" id="completed-challenges">0/9</div>
+                                <div class="stat-value" id="completed-challenges">0/8</div>
                                 <div class="stat-label">MISI SELESAI</div>
                             </div>
                             <div class="stat-card">
@@ -940,22 +924,10 @@
     </footer>
 
     <script>
-        // CTF Challenges Data - UPDATED WITH WSG{} FLAGS
+        // CTF Challenges Data - TANPA QR CODE
         const challenges = [
             {
                 id: 1,
-                name: "Pemindaian QR Code",
-                category: "Miscellaneous",
-                difficulty: "easy",
-                points: 20,
-                description: "Pindai QR code untuk mendapatkan flag tersembunyi",
-                flag: "WSG{qr_c0d3_1s_fun}",
-                path: "#",
-                solved: false,
-                hasQR: true
-            },
-            {
-                id: 2,
                 name: "SQL Injection Dasar",
                 category: "Web Exploitation",
                 difficulty: "easy",
@@ -966,7 +938,7 @@
                 solved: false
             },
             {
-                id: 3,
+                id: 2,
                 name: "Dekripsi Caesar Cipher",
                 category: "Cryptography",
                 difficulty: "easy",
@@ -977,7 +949,7 @@
                 solved: false
             },
             {
-                id: 4,
+                id: 3,
                 name: "Analisis Metadata Gambar",
                 category: "Forensics",
                 difficulty: "medium",
@@ -988,7 +960,7 @@
                 solved: false
             },
             {
-                id: 5,
+                id: 4,
                 name: "Simple Crackme",
                 category: "Reverse Engineering",
                 difficulty: "hard",
@@ -999,7 +971,7 @@
                 solved: false
             },
             {
-                id: 6,
+                id: 5,
                 name: "Kerentanan XSS",
                 category: "Web Exploitation",
                 difficulty: "medium",
@@ -1010,7 +982,7 @@
                 solved: false
             },
             {
-                id: 7,
+                id: 6,
                 name: "RSA Pemula",
                 category: "Cryptography",
                 difficulty: "medium",
@@ -1021,7 +993,7 @@
                 solved: false
             },
             {
-                id: 8,
+                id: 7,
                 name: "Analisis Paket Jaringan",
                 category: "Forensics",
                 difficulty: "hard",
@@ -1032,7 +1004,7 @@
                 solved: false
             },
             {
-                id: 9,
+                id: 8,
                 name: "Analisis APK Android",
                 category: "Reverse Engineering",
                 difficulty: "hard",
@@ -1084,73 +1056,25 @@
                 const challengeElement = document.createElement('div');
                 challengeElement.className = 'challenge-item';
                 
-                if (challenge.hasQR) {
-                    challengeElement.innerHTML = `
-                        <div class="challenge-header">
-                            <div class="challenge-title">${challenge.name}</div>
-                            <div class="challenge-meta">
-                                <span class="challenge-difficulty difficulty-${challenge.difficulty}">${challenge.difficulty.toUpperCase()}</span>
-                                <span>${challenge.points} pts</span>
-                                <span>${challenge.category}</span>
-                            </div>
+                challengeElement.innerHTML = `
+                    <div class="challenge-header">
+                        <div class="challenge-title">${challenge.name}</div>
+                        <div class="challenge-meta">
+                            <span class="challenge-difficulty difficulty-${challenge.difficulty}">${challenge.difficulty.toUpperCase()}</span>
+                            <span>${challenge.points} pts</span>
+                            <span>${challenge.category}</span>
                         </div>
-                        <div class="challenge-description">${challenge.description}</div>
-                        <div class="qr-container">
-                            <div class="qr-code" id="qr-${challenge.id}"></div>
-                            <div>
-                                <input type="text" class="flag-input" id="flag-input-${challenge.id}" placeholder="Masukkan flag WSG{...}">
-                                <button class="btn btn-primary" onclick="submitFlag(${challenge.id})">Submit Flag</button>
-                            </div>
-                            <div id="result-${challenge.id}"></div>
-                        </div>
-                    `;
-                } else {
-                    challengeElement.innerHTML = `
-                        <div class="challenge-header">
-                            <div class="challenge-title">${challenge.name}</div>
-                            <div class="challenge-meta">
-                                <span class="challenge-difficulty difficulty-${challenge.difficulty}">${challenge.difficulty.toUpperCase()}</span>
-                                <span>${challenge.points} pts</span>
-                                <span>${challenge.category}</span>
-                            </div>
-                        </div>
-                        <div class="challenge-description">${challenge.description}</div>
-                        <div>
-                            <input type="text" class="flag-input" id="flag-input-${challenge.id}" placeholder="Masukkan flag WSG{...}">
-                            <button class="btn btn-primary" onclick="submitFlag(${challenge.id})">Submit Flag</button>
-                        </div>
-                        <div id="result-${challenge.id}"></div>
-                    `;
-                }
+                    </div>
+                    <div class="challenge-description">${challenge.description}</div>
+                    <div>
+                        <input type="text" class="flag-input" id="flag-input-${challenge.id}" placeholder="Masukkan flag WSG{...}">
+                        <button class="btn btn-primary" onclick="submitFlag(${challenge.id})">Submit Flag</button>
+                    </div>
+                    <div id="result-${challenge.id}"></div>
+                `;
+                
                 challengesList.appendChild(challengeElement);
             });
-
-            // Generate QR Code for challenge 1
-            generateQRCode(1, "WSG{qr_c0d3_1s_fun}");
-        }
-
-        // Generate QR Code - FIXED REAL QR CODE
-        function generateQRCode(challengeId, text) {
-            const qrContainer = document.getElementById(`qr-${challengeId}`);
-            if (qrContainer && QRCode) {
-                QRCode.toCanvas(text, { 
-                    width: 180,
-                    height: 180,
-                    margin: 1,
-                    color: {
-                        dark: '#000000',
-                        light: '#FFFFFF'
-                    }
-                }, function(err, canvas) {
-                    if (err) {
-                        console.error(err);
-                        qrContainer.innerHTML = '<div style="color: red; padding: 20px;">Error generating QR code</div>';
-                        return;
-                    }
-                    qrContainer.innerHTML = '';
-                    qrContainer.appendChild(canvas);
-                });
-            }
         }
 
         // Submit Flag Function - FIXED SHARED PROGRESS
@@ -1213,7 +1137,7 @@
             }
         }
 
-        // Update Public Scoreboard
+        // Update Public Scoreboard - FIXED
         function updatePublicScoreboard() {
             const scoreboardBody = document.getElementById('public-scoreboard-body');
             const sortedUsers = [...users].sort((a, b) => b.score - a.score);
@@ -1376,55 +1300,27 @@
                 const challengeElement = document.createElement('div');
                 challengeElement.className = 'challenge-item';
                 
-                if (challenge.hasQR) {
-                    challengeElement.innerHTML = `
-                        <div class="challenge-header">
-                            <div class="challenge-title">${challenge.name}</div>
-                            <div class="challenge-meta">
-                                <span class="challenge-difficulty difficulty-${challenge.difficulty}">${challenge.difficulty.toUpperCase()}</span>
-                                <span>${challenge.points} pts</span>
-                                <span style="color: ${isSolved ? '#00ff41' : '#ff0033'}">${isSolved ? 'BERHASIL' : 'TERKUNCI'}</span>
-                            </div>
+                challengeElement.innerHTML = `
+                    <div class="challenge-header">
+                        <div class="challenge-title">${challenge.name}</div>
+                        <div class="challenge-meta">
+                            <span class="challenge-difficulty difficulty-${challenge.difficulty}">${challenge.difficulty.toUpperCase()}</span>
+                            <span>${challenge.points} pts</span>
+                            <span style="color: ${isSolved ? '#00ff41' : '#ff0033'}">${isSolved ? 'BERHASIL' : 'TERKUNCI'}</span>
                         </div>
-                        <div class="challenge-description">${challenge.description}</div>
-                        ${isSolved ? 
-                            '<div style="color: #00ff41;">✓ FLAG DITEMUKAN: ' + challenge.flag + '</div>' :
-                            `<div class="qr-container">
-                                <div class="qr-code" id="dashboard-qr-${challenge.id}"></div>
-                                <div>
-                                    <input type="text" class="flag-input" id="dashboard-flag-input-${challenge.id}" placeholder="Masukkan flag WSG{...}">
-                                    <button class="btn btn-primary" onclick="submitFlag(${challenge.id})">Submit Flag</button>
-                                </div>
-                                <div id="dashboard-result-${challenge.id}"></div>
-                            </div>`
-                        }
-                    `;
-                } else {
-                    challengeElement.innerHTML = `
-                        <div class="challenge-header">
-                            <div class="challenge-title">${challenge.name}</div>
-                            <div class="challenge-meta">
-                                <span class="challenge-difficulty difficulty-${challenge.difficulty}">${challenge.difficulty.toUpperCase()}</span>
-                                <span>${challenge.points} pts</span>
-                                <span style="color: ${isSolved ? '#00ff41' : '#ff0033'}">${isSolved ? 'BERHASIL' : 'TERKUNCI'}</span>
-                            </div>
-                        </div>
-                        <div class="challenge-description">${challenge.description}</div>
-                        ${isSolved ? 
-                            '<div style="color: #00ff41;">✓ FLAG DITEMUKAN: ' + challenge.flag + '</div>' :
-                            `<div>
-                                <input type="text" class="flag-input" id="dashboard-flag-input-${challenge.id}" placeholder="Masukkan flag WSG{...}">
-                                <button class="btn btn-primary" onclick="submitFlag(${challenge.id})">Submit Flag</button>
-                                <div id="dashboard-result-${challenge.id}"></div>
-                            </div>`
-                        }
-                    `;
-                }
+                    </div>
+                    <div class="challenge-description">${challenge.description}</div>
+                    ${isSolved ? 
+                        '<div style="color: #00ff41;">✓ FLAG DITEMUKAN: ' + challenge.flag + '</div>' :
+                        `<div>
+                            <input type="text" class="flag-input" id="dashboard-flag-input-${challenge.id}" placeholder="Masukkan flag WSG{...}">
+                            <button class="btn btn-primary" onclick="submitFlag(${challenge.id})">Submit Flag</button>
+                            <div id="dashboard-result-${challenge.id}"></div>
+                        </div>`
+                    }
+                `;
                 dashboardChallenges.appendChild(challengeElement);
             });
-
-            // Generate QR Code for dashboard
-            generateQRCode(1, "WSG{qr_c0d3_1s_fun}");
         }
 
         function updateScoreboard() {
