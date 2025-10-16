@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Decode - songwaCTF</title>
+    <style>
+        body { 
+            background: #0a0a0a; 
+            color: #00ff41; 
+            font-family: 'Courier New', monospace;
+            padding: 2rem;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        .challenge-box { 
+            background: #111; 
+            border: 1px solid #00ff41;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            background: #000;
+            border: 1px solid #333;
+            color: #00ff41;
+            margin: 0.5rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        button {
+            background: transparent;
+            border: 1px solid #00ff41;
+            color: #00ff41;
+            padding: 1rem 2rem;
+            cursor: pointer;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        button:hover {
+            background: rgba(0, 255, 65, 0.1);
+        }
+        .flag { 
+            color: #ff0033; 
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+        .hint {
+            color: #ffaa00;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+        .encoded-text {
+            background: #000;
+            border: 1px solid #333;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Base64 Decode Challenge</h1>
+        <div class="challenge-box">
+            <h2>Dekode Pesan Base64</h2>
+            <p><strong>Deskripsi:</strong> Dekode pesan Base64 berikut untuk mendapatkan flag</p>
+            
+            <div class="encoded-text">
+                V1NHe2Jhc2U2NF9kZWNvZGVfZWFzeX0=
+            </div>
+
+            <div class="hint">
+                <strong>Hint:</strong> Gunakan tool online Base64 decoder atau function JavaScript atob()
+            </div>
+
+            <div class="decoder-tool">
+                <h3>Decoder Tool (Opsional):</h3>
+                <input type="text" id="base64Input" placeholder="Masukkan teks Base64 di sini">
+                <button onclick="decodeBase64()">Decode</button>
+                <div id="decodedOutput" class="encoded-text"></div>
+            </div>
+            
+            <div class="flag-submission">
+                <h3>Submit Flag</h3>
+                <input type="text" id="flagInput" placeholder="WSG{...}">
+                <button onclick="submitFlag()">Submit Flag</button>
+                <div id="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Base64 decoder tool
+        function decodeBase64() {
+            const input = document.getElementById('base64Input').value;
+            const output = document.getElementById('decodedOutput');
+            
+            try {
+                const decoded = atob(input);
+                output.textContent = `Decoded: ${decoded}`;
+            } catch (e) {
+                output.textContent = 'Error: Invalid Base64 string';
+            }
+        }
+
+        function submitFlag() {
+            const flagInput = document.getElementById('flagInput');
+            const result = document.getElementById('result');
+            const submittedFlag = flagInput.value.trim();
+
+            if (submittedFlag === 'WSG{base64_decode_easy}') {
+                result.innerHTML = '<div style="color: #00ff41;">🎉 Berhasil! Flag benar: WSG{base64_decode_easy}</div>';
+                
+                // Simpan ke localStorage
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                if (currentUser) {
+                    let users = JSON.parse(localStorage.getItem('ctfUsers')) || [];
+                    const userIndex = users.findIndex(u => u.username === currentUser.username);
+                    if (userIndex !== -1) {
+                        if (!users[userIndex].solvedChallenges) users[userIndex].solvedChallenges = [];
+                        if (!users[userIndex].solvedChallenges.includes('base64-decode')) {
+                            users[userIndex].solvedChallenges.push('base64-decode');
+                            users[userIndex].score += 25;
+                            localStorage.setItem('ctfUsers', JSON.stringify(users));
+                        }
+                    }
+                }
+                flagInput.disabled = true;
+            } else {
+                result.innerHTML = '<div style="color: #ff0033;">❌ Flag salah. Coba lagi!</div>';
+            }
+        }
+
+        // Auto-decode the challenge text
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                const decoded = atob('V1NHe2Jhc2U2NF9kZWNvZGVfZWFzeX0=');
+                console.log('Flag should be:', decoded);
+            } catch (e) {
+                console.log('Base64 decode error');
+            }
+        });
+    </script>
+</body>
+</html>
